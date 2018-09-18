@@ -69,7 +69,7 @@ Copyright (c) 2018 bellma101""")
     # java.util.List<IScanIssue> doPassiveScan(IHttpRequestResponse
     # baseRequestResponse)
     def doPassiveScan(self, baseRequestResponse):
-
+        print ("Passive scan...")
         self._requestResponse = baseRequestResponse
 
         try:
