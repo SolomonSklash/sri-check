@@ -5,20 +5,25 @@ import re
 
 # regex for getting URL base domain, won't work for script/stylesheet paths
 regex = r"([a-zA-Z0-9-]+)(\.[a-zA-Z]{2,5})?(\.[a-zA-Z]+$)"
+regex2 = r"\<script.+\>\<\/script\>"
 
-test_str = ("domain.com\n"
+test_str = ("domain.com/test\n"
 	"subdomain.domain.com\n"
 	"sub.sub.subdomain.domain.com\n"
 	"sub.subdomain.com.au\n"
 	"coool.new.domain.luxury\na.b.c.d.g.com\n"
-    "https://example.com/example-framework.js")
-test_str2 = '<script src="https://example.com/example-framework.js" integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"       crossorigin="anonymous"></script>'
+    "https://example.com/example-frameworkjs\n"
+	"https://example.com/test")
+
+test_str2 = '<script src="https://example.com/example-framework.js" integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC" crossorigin="anonymous"></script>'
 
 matches = re.finditer(regex, test_str, re.MULTILINE)
+matches2 = re.finditer(regex2,test_str2)
 
 for match in matches:
     print(match.group())
-
+for match in matches2:
+    print(match.group())
 
 
 
