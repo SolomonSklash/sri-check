@@ -142,17 +142,19 @@ Copyright (c) 2018 bellma101""")
         try:
             for match in matches:
                 try:
-                    if domain.lower() in match.lower():
-                        print("")
-                    else:  # Parse script/link for integrity attribute
-                        print("Different domain, looking for integrity attribute...")
+                    # if domain.lower() in match.lower():
+                    #     print("")
+                    # else:  # Parse script/link for integrity attribute
+                    #     print("Different domain, looking for integrity attribute...")
+                    #     integrityRegex = r"""integrity=('|")sha(256|384|512)-[a-zA-Z0-9\/=+]+('|")"""
+                    #     compiledIntegrityRegex = re.compile(integrityRegex)
+
+                    if domain.lower() not in match.lower():
                         integrityRegex = r"""integrity=('|")sha(256|384|512)-[a-zA-Z0-9\/=+]+('|")"""
-                        compiledIntegrityRegex = re.compile(integrityRegex)
+                        compiledIntegrityRegex = re.compile(integrityRegex)                    
 
                         result = compiledIntegrityRegex.search(match)
-                        if result is not None:
-                            print("Hash found, no issue " + result.group())
-                        else:
+                        if result is None:
                             print("RAISE ISSUE HERE!")
                 except:
                     print("Failed to match against domain.")
