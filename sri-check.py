@@ -149,12 +149,11 @@ Copyright (c) 2018 bellma101""")
                         result = compiledIntegrityRegex.search(match)
                         if result is None:
                             print("RAISE ISSUE HERE!")
+                            # Add issues here
                 except:
                     print("Failed to match against domain.")
         except:
             print("Failed to print matches.")
-
-        # Add issues
 
         if len(issues) > 0:
             return issues
