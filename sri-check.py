@@ -86,8 +86,10 @@ Copyright (c) 2018 bellma101""")
 
         try:
             for match in scriptMatch:
+                print("Found script match: " + match.string)
                 matches.append(match)
             for match in linkMatch:
+                print("Found link match: " + match.string)
                 matches.append(match)
         except:
             print("Failed to iterate through matches.")
@@ -122,9 +124,10 @@ Copyright (c) 2018 bellma101""")
                 try:
                     if "Host" in header:
                         hostHeader = header
-                        print hostHeader
+                        domain = hostHeader.split()[1]
+                        print domain
                 except:
-                        print("Failed!!!!")
+                        print("Failed to get Host header.")
 
             issues = list()
 
@@ -137,7 +140,14 @@ Copyright (c) 2018 bellma101""")
             print("Failed to get regex matches.")
         try:
             for match in matches:
-                print match.group()
+                # print match.group()
+                try:
+                    if domain.lower() in match.group().lower():
+                        print("Domain match found in " + str(match.group()))
+                    else:
+                        print("No domain match found in " + str(match.group()))
+                except:
+                    print("Couldn't match against domain!")
         except:
             print("Failed to print matches.")
 
