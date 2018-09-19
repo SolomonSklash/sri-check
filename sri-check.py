@@ -47,6 +47,7 @@ Copyright (c) 2018 bellma101""")
 
         return
 
+    # Get matches for highlighting locations in responses
     # See https://github.com/PortSwigger/example-scanner-checks/blob/master/python/CustomScannerChecks.py
     def _get_matches(self, response, match):
         matches = []
@@ -149,7 +150,21 @@ Copyright (c) 2018 bellma101""")
                         result = compiledIntegrityRegex.search(match)
                         if result is None:
                             print("RAISE ISSUE HERE!")
+                            print(match)
                             # Add issues here
+                            try:
+                                offset = self._get_matches(baseRequestResponse.getResponse(), match)
+                            except:
+                                print("Failed to get match offset.")
+
+                            try:
+                                issues.append(SRIScanIssue(
+                                    self._requestResponse.getHttpService(),
+                                    self._helpers.analyzeRequest(baseRequestResponse).getUrl(),
+                                    [self._callbacks.applyMarkers(self._requestResponse, None, offset)]
+                                ))
+                            except:
+                                print("Failed to append issue.")
                 except:
                     print("Failed to match against domain.")
         except:
@@ -166,10 +181,10 @@ Copyright (c) 2018 bellma101""")
     # report both issues, and 1 to report the new issue only.'
     # consolidateDuplicateIssues(IScanIssue existingIssue, IScanIssue newIssue)
     def consolidateDuplicateIssues(self, existingIssue, newIssue):
-        if (existingIssue.getIssueDetail() == newIssue.getIssueDetail()):
-            return -1
-        else:
-            return 0
+        # if (existingIssue.getIssueDetail() == newIssue.getIssueDetail()):
+        #     return -1
+        # else:
+        return 0
 
 # 'This interface is used to retrieve details of Scanner issues. Extensions
 # can obtain details of issues by registering an IScannerListener or
@@ -185,20 +200,16 @@ Copyright (c) 2018 bellma101""")
 
 class SRIScanIssue(IScanIssue):
     # constructor for setting issue information
-    def __init__(self, httpService, url, requestResponse, decodedCookie,
-                 cookieName, rawCookieValue):
+    def __init__(self, httpService, url, requestResponse):
         self._httpService = httpService
         self._url = url
         self._requestResponse = requestResponse
-        self._cookieName = cookieName
-        self._rawCookieValue = rawCookieValue
-        self._decodedCookie = decodedCookie
 
     def getUrl(self):
         return self._url
 
     def getIssueName(self):
-        return 'Decrypted Netscaler Persistence Cookie'
+        return 'Missing SRI Attribute'
 
     def getIssueType(self):
         return 0
@@ -207,33 +218,20 @@ class SRIScanIssue(IScanIssue):
         return 'Information'
 
     def getConfidence(self):
-        return 'Certain'
+        return 'Firm'
 
     def getIssueBackground(self):
-        return 'Citrix Netscaler persistence cookies use weak encryption, ' \
-            'including a Caesar shift and XORing against fixed values.' \
-            'These cookies are trivially decrypted and reveal the server ' \
-            'name, IP address, and port.'
+        return 'This is the issue background.'
 
     def getRemediationBackground(self):
         return None
 
     def getIssueDetail(self):
-        splitCookie = self._decodedCookie.split(':')
-        description = 'A Netscaler persistence cookie was found and decrypted.<br>'
-        description += '<br><b>Encrypted Cookie Value: </b>' + str(self._rawCookieValue)
-        description += '<br><br><b>Decrypted values:</b>'
-        description += '<br><ul><li><b>Server Name: </b>' + str(splitCookie[0])
-        description += '</li><li><b>Server IP: </b>' + splitCookie[1]
-        description += '</li><li><b>Server Port: </b>' + splitCookie[2] + '</li></ul>'
+        description = "This is the issue detail."
         return description
 
     def getRemediationDetail(self):
-        return '<ul><li>https://www.citrix.com/blogs/2011/08/05/' \
-            'secure-your-application-cookies-before-it-is-too-late/' \
-            '</li><li>https://docs.citrix.com/en-us/netscaler/11/' \
-            'traffic-management/load-balancing/load-balancing-' \
-            'persistence/http-cookie-persistence.html</li></ul>'
+        return 'This is the remediation detail.'
 
     def getHttpMessages(self):
         return self._requestResponse
