@@ -69,21 +69,30 @@ Copyright (c) 2018 bellma101""")
     # java.util.List<IScanIssue> doPassiveScan(IHttpRequestResponse
     # baseRequestResponse)
     def doPassiveScan(self, baseRequestResponse):
-        print ("Passive scan...")
+        print("Passive scan...")
         self._requestResponse = baseRequestResponse
 
         try:
             analyzedResponse = self._helpers.analyzeResponse(
                 baseRequestResponse.getResponse())
-            headerList = analyzedResponse.getHeader()
-            print (headerList)
+            headerList = analyzedResponse.getHeaders()
+            # print(headerList)
+
+            issues = list()
 
         except:
-            print ("Failed to analyze response.")
+            print 'Failed to parse reponse headers.'
 
-        issues = list()
-        # Do stuff here...
+        try:
+            analyzedRequest = self._helpers.analyzeRequest(
+                baseRequestResponse.getRequest())
+            headerRequestList = analyzedRequest.getHeaders()
+            print(headerRequestList)
 
+            issues = list()
+
+        except:
+            print 'Failed to parse request headers.'
         if len(issues) > 0:
             return issues
 
