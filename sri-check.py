@@ -62,6 +62,7 @@ Copyright (c) 2018 bellma101""")
 
         return matches
 
+    # Parse response for <script> and <link> tags
     def regexResponseParse(self):
         matches = []
         scriptRegex = r"\<script.+\>\<\/script\>"
@@ -100,19 +101,21 @@ Copyright (c) 2018 bellma101""")
     # java.util.List<IScanIssue> doPassiveScan(IHttpRequestResponse
     # baseRequestResponse)
     def doPassiveScan(self, baseRequestResponse):
-        print("Passive scan...")
+
         self._requestResponse = baseRequestResponse
 
+        issues = list()
+
+        # Analyze response for Host header - DO I NEED THIS???????????**********************
         try:
             analyzedResponse = self._helpers.analyzeResponse(
                 baseRequestResponse.getResponse())
             headerList = analyzedResponse.getHeaders()
 
-            issues = list()
-
         except:
             print 'Failed to parse reponse headers.'
 
+        # Analyze request for Host header
         try:
             analyzedRequest = self._helpers.analyzeRequest(
                 baseRequestResponse.getRequest())
@@ -123,29 +126,36 @@ Copyright (c) 2018 bellma101""")
                     if "Host" in header:
                         hostHeader = header
                         domain = hostHeader.split()[1]
-                        print domain
                 except:
                         print("Failed to get Host header.")
-
-            issues = list()
 
         except:
             print 'Failed to parse request headers.'
 
+        # Get <script> and <link> tags via regex
         try:
             matches = self.regexResponseParse()
         except:
             print("Failed to get regex matches.")
+
+        # Ignore scripts/links from same domain
         try:
             for match in matches:
-                # print match.group()
                 try:
-                    if domain.lower() in match.group().lower():
-                        print("Domain match found in " + str(match.group()))
-                    else:
-                        print("No domain match found in " + str(match.group()))
+                    if domain.lower() in match.lower():
+                        print("")
+                    else:  # Parse script/link for integrity attribute
+                        print("Different domain, looking for integrity attribute...")
+                        integrityRegex = r"""integrity=('|")sha(256|384|512)-[a-zA-Z0-9\/=+]+('|")"""
+                        compiledIntegrityRegex = re.compile(integrityRegex)
+
+                        result = compiledIntegrityRegex.search(match)
+                        if result is not None:
+                            print("Hash found, no issue " + result.group())
+                        else:
+                            print("RAISE ISSUE HERE!")
                 except:
-                    print("Couldn't match against domain!")
+                    print("Failed to match against domain.")
         except:
             print("Failed to print matches.")
 

@@ -54,7 +54,7 @@ except:
 try:
 	for match in scriptMatch:
 		# print("Found script match: " + str(match.group()))
-		print("Found script match: " + str(match))
+		# print("Found script match: " + str(match))
 		matches.append(match)
 	# for match in linkMatch:
 	# 	# print("Found link match: " + str(match.group()))
@@ -62,3 +62,26 @@ try:
 	# 	matches.append(match)
 except:
 	print("Failed to iterate through matches.")
+
+domain = "localhost:8002"
+
+try:
+	for match in scriptMatch:
+		try:
+			if domain.lower() in match.lower():
+				print("Domain match found in")
+			else:  # Parse script/link for integrity attribute
+				print("Different domain, looking for integrity attribute...")
+				integrityRegex = r"integrity=('|\")sha(256|384|512)-[a-zA-Z0-9\/=+]+('|\")"
+				compiledIntegrityRegex = re.compile(integrityRegex)
+				if "integrity" in match:
+					print("Integrity found in for...in.")
+				try:
+					result = compiledIntegrityRegex.search(match)
+					print(result.group())
+				except:
+					print("Failed to get integrity regex match.")
+		except:
+			print("Failed to match against domain.")
+except:
+	print("Failed to print matches.")
