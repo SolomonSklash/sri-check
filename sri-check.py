@@ -76,7 +76,6 @@ Copyright (c) 2018 bellma101""")
             analyzedResponse = self._helpers.analyzeResponse(
                 baseRequestResponse.getResponse())
             headerList = analyzedResponse.getHeaders()
-            # print(headerList)
 
             issues = list()
 
@@ -87,12 +86,20 @@ Copyright (c) 2018 bellma101""")
             analyzedRequest = self._helpers.analyzeRequest(
                 baseRequestResponse.getRequest())
             headerRequestList = analyzedRequest.getHeaders()
-            print(headerRequestList)
+
+            for header in headerRequestList:
+                try:
+                    if "Host" in header:
+                        hostHeader = header
+                        print hostHeader
+                except:
+                        print("Failed!!!!")
 
             issues = list()
 
         except:
             print 'Failed to parse request headers.'
+
         if len(issues) > 0:
             return issues
 
