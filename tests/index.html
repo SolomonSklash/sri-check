@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Testing</title>
+  <meta name="description" content="Tests for burp-sri">
+  <meta name="author" content="bellma101">
+</head>
+
+<body>
+
+  <p>Not an issue (integrity attribute included): &#60;script src=&#34;https://example.com/example-framework.js&#34; integrity=&#34;sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC&#34; crossorigin=&#34;anonymous&#34;&#62;&#60;/script&#62;</p>
+    <script src="https://example.com/example-framework.js" integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC" crossorigin="anonymous"></script>
+  <p>Not an issue (integrity attribute included and loaded from host domain): &#60;script src=&#34;https://localhost:8002/asd&#34; integrity=&#34;sha512-OGQ1Nzc3ODYxMDk2ZTM1MzIzOWVhN2IzN2M0NTY5OWYzYjQzODVmNWJiMjU1M2NiZTFhNzgzMzNiZDJhODJjYWY3ODg5Yjg2NDIwYTUwZjUwZTI4NmVjN2ZhZDU1NzcxCg==&#34; crossorigin=&#34;anonymous&#34;&#62;&#60;/script&#62;</p>  
+    <script src="https://localhost:8002/asd" integrity="sha512-OGQ1Nzc3ODYxMDk2ZTM1MzIzOWVhN2IzN2M0NTY5OWYzYjQzODVmNWJiMjU1M2NiZTFhNzgzMzNiZDJhODJjYWY3ODg5Yjg2NDIwYTUwZjUwZTI4NmVjN2ZhZDU1NzcxCg==" crossorigin="anonymous"></script>
+  <p>Not an issue (integrity attribute included): &#60;link rel=&#34;stylesheet&#34; href=&#34;https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css&#34; integrity=&#34;sha512-5KWJw2mvMO2ZM5fndVxUQmpVPqaxZyYRTMrXtrprsyQ2zM0o0NMjU02I8ZJXeBPtrmrPO4IAyCCRsydG0BJoQ==&#34; crossorigin=&#34;anonymous&#34;&#62;</p>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" integrity="sha512-5KWJw2mvMO2ZM5fndVxUQmpVPqaxZyYRTMrXtrprsyQ2zM0o0NMjU02I8ZJXeBPtrmrPO4IAyCCRsydG0BJoQ==" crossorigin="anonymous">
+  <p><b>Issue (integrity attribute not included):</b> &#60;script src=&#34;https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js&#34;&#62;&#60;/script&#62;</p>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <p>Not an issue (loaded from host domain): &#60;link rel=&#34;stylesheet&#34; href=&#34;http://localhost:8002/bootstrap/3.3.4/css/bootstrap.min.css&#34;&#62;</p>
+    <link rel="stylesheet" href="http://localhost:8002/bootstrap/3.3.4/css/bootstrap.min.css">
+  <p><b>Issue (integrity attribute included):</b> &#60;link rel=&#34;stylesheet&#34; href=&#34;www.example.com&#34;&#62;</p>
+    <link rel="stylesheet" href="www.example.com">
+
+</body>
+
+</html>

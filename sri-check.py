@@ -1,6 +1,6 @@
 """
 Name:           SRI Check
-Version:        2.0.0
+Version:        1.0.0
 Date:           08/17/2018
 Author:         bellma101 - bellma101@0xfeed.io - Penetration Tester with FIS Global
 Gitlab:         https://github.com/bellma101/cookie-decrypter/
@@ -15,12 +15,10 @@ try:
     from java.io import PrintWriter
     from array import array
     import re
-    import sys
-    import string
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = '0.0.1'
+VERSION = '1.0.0'
 
 # Inherit IBurpExtender as base class, which defines registerExtenderCallbacks
 # Inherit IScannerCheck to register as custom scanner
@@ -101,6 +99,7 @@ Copyright (c) 2018 bellma101""")
     # passing the self object as well for access to helper functions, etc.
     # java.util.List<IScanIssue> doPassiveScan(IHttpRequestResponse
     # baseRequestResponse)
+
     def doPassiveScan(self, baseRequestResponse):
 
         self._requestResponse = baseRequestResponse
@@ -169,6 +168,7 @@ Copyright (c) 2018 bellma101""")
     # 'The method should return -1 to report the existing issue only, 0 to
     # report both issues, and 1 to report the new issue only.'
     # consolidateDuplicateIssues(IScanIssue existingIssue, IScanIssue newIssue)
+
     def consolidateDuplicateIssues(self, existingIssue, newIssue):
         return 0
 
@@ -195,7 +195,7 @@ class SRIScanIssue(IScanIssue):
         return self._url
 
     def getIssueName(self):
-        return 'Missing SRI Attribute'
+        return 'Missing Subresource Integrity Attribute'
 
     def getIssueType(self):
         return 0
@@ -210,7 +210,10 @@ class SRIScanIssue(IScanIssue):
         return """Third-party libraries and scripts, such as Bootstrap, Angular, and jQuery,are commonly included from remote, potentially untrusted servers and CDNs. Subresource Integrity is a mechanism that verifys each time a resource is fetched, it matches a known good version and has not been tampered with. If Subresource Integrity has not been implemented, attackers could make malicious changes to a remote resource and compromise any site that includes the resource, as well as any users of the affected site."""
 
     def getRemediationBackground(self):
-        return None
+        return "https://scotthelme.co.uk/subresource-integrity/<br>" \
+                "https://report-uri.com/home/sri_hash<br>" \
+                "https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity<br>" \
+                "https://www.w3.org/TR/SRI/"
 
     def getIssueDetail(self):
         description = "A script or stylesheet is missing the Subresource Integrity attribute."
