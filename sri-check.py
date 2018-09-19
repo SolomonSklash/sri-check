@@ -68,8 +68,8 @@ Copyright (c) 2018 bellma101""")
         linkRegex = r"\<link.+\>"
 
         try:
-            compiledScriptRegex = re.compile(scriptRegex, re.DOTALL)
-            compiledLinkRegex = re.compile(linkRegex, re.DOTALL)
+            compiledScriptRegex = re.compile(scriptRegex)
+            compiledLinkRegex = re.compile(linkRegex)
         except:
             print("Failed to compile regexes.")
 
@@ -79,17 +79,15 @@ Copyright (c) 2018 bellma101""")
             print("Failed to get response.")
 
         try:
-            scriptMatch = compiledScriptRegex.finditer(self._helpers.bytesToString(response))
-            linkMatch = compiledLinkRegex.finditer(self._helpers.bytesToString(response))
+            scriptMatch = compiledScriptRegex.findall(self._helpers.bytesToString(response))
+            linkMatch = compiledLinkRegex.findall(self._helpers.bytesToString(response))
         except:
             print("Failed to run regexes.")
 
         try:
             for match in scriptMatch:
-                print("Found script match: " + match.string)
                 matches.append(match)
             for match in linkMatch:
-                print("Found link match: " + match.string)
                 matches.append(match)
         except:
             print("Failed to iterate through matches.")
