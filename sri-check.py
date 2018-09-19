@@ -107,13 +107,13 @@ Copyright (c) 2018 bellma101""")
         issues = list()
 
         # Analyze response for Host header - DO I NEED THIS???????????**********************
-        try:
-            analyzedResponse = self._helpers.analyzeResponse(
-                baseRequestResponse.getResponse())
-            headerList = analyzedResponse.getHeaders()
+        # try:
+        #     analyzedResponse = self._helpers.analyzeResponse(
+        #         baseRequestResponse.getResponse())
+        #     headerList = analyzedResponse.getHeaders()
 
-        except:
-            print 'Failed to parse reponse headers.'
+        # except:
+        #     print 'Failed to parse reponse headers.'
 
         # Analyze request for Host header
         try:
@@ -138,17 +138,10 @@ Copyright (c) 2018 bellma101""")
         except:
             print("Failed to get regex matches.")
 
-        # Ignore scripts/links from same domain
+        # COMMENT NEEDED HERE
         try:
             for match in matches:
                 try:
-                    # if domain.lower() in match.lower():
-                    #     print("")
-                    # else:  # Parse script/link for integrity attribute
-                    #     print("Different domain, looking for integrity attribute...")
-                    #     integrityRegex = r"""integrity=('|")sha(256|384|512)-[a-zA-Z0-9\/=+]+('|")"""
-                    #     compiledIntegrityRegex = re.compile(integrityRegex)
-
                     if domain.lower() not in match.lower():
                         integrityRegex = r"""integrity=('|")sha(256|384|512)-[a-zA-Z0-9\/=+]+('|")"""
                         compiledIntegrityRegex = re.compile(integrityRegex)                    
@@ -160,6 +153,8 @@ Copyright (c) 2018 bellma101""")
                     print("Failed to match against domain.")
         except:
             print("Failed to print matches.")
+
+        # Add issues
 
         if len(issues) > 0:
             return issues
