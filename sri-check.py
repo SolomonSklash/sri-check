@@ -47,7 +47,6 @@ Copyright (c) 2018 bellma101""")
 
         return
 
-    # Get offset of cookie name in response. Requires array import above.
     # See https://github.com/PortSwigger/example-scanner-checks/blob/master/python/CustomScannerChecks.py
     def _get_matches(self, response, match):
         matches = []
@@ -60,6 +59,38 @@ Copyright (c) 2018 bellma101""")
                 break
             matches.append(array('i', [start, start + matchlen]))
             start += matchlen
+
+        return matches
+
+    def regexResponseParse(self):
+        matches = []
+        scriptRegex = r"\<script.+\>\<\/script\>"
+        linkRegex = r"\<link.+\>"
+
+        try:
+            compiledScriptRegex = re.compile(scriptRegex, re.DOTALL)
+            compiledLinkRegex = re.compile(linkRegex, re.DOTALL)
+        except:
+            print("Failed to compile regexes.")
+
+        try:
+            response = self._requestResponse.getResponse()
+        except:
+            print("Failed to get response.")
+
+        try:
+            scriptMatch = compiledScriptRegex.finditer(self._helpers.bytesToString(response))
+            linkMatch = compiledLinkRegex.finditer(self._helpers.bytesToString(response))
+        except:
+            print("Failed to run regexes.")
+
+        try:
+            for match in scriptMatch:
+                matches.append(match)
+            for match in linkMatch:
+                matches.append(match)
+        except:
+            print("Failed to iterate through matches.")
 
         return matches
 
@@ -99,6 +130,16 @@ Copyright (c) 2018 bellma101""")
 
         except:
             print 'Failed to parse request headers.'
+
+        try:
+            matches = self.regexResponseParse()
+        except:
+            print("Failed to get regex matches.")
+        try:
+            for match in matches:
+                print match.group()
+        except:
+            print("Failed to print matches.")
 
         if len(issues) > 0:
             return issues
