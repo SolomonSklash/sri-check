@@ -8,5 +8,9 @@ A Burp Suite extension for identifying missing Subresource Integrity attributes.
 * Requires Jython 2.7+
 * Pull requests welcome!
 
+### Todo
+
+* Add support for relative paths
+
 ### Screenshots
 [![Example Issue](screenshots/screenshot01.png)]
