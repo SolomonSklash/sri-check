@@ -10,7 +10,7 @@ A Burp Suite extension for identifying missing Subresource Integrity attributes.
 
 ### Todo
 
-* Add support for relative paths
+* ~~Add support for relative paths~~
 
 ### Screenshots
 [![Example Issue](screenshots/screenshot01.png)]

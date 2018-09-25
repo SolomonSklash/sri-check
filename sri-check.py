@@ -132,13 +132,20 @@ Copyright (c) 2018 bellma101""")
         # Parse matches for missing SRI attribute and create corresponding issue
         try:
             for match in matches:
-                try:
-                    if domain.lower() not in match.lower():
+                try:  # check if resource is being loaded from 3rd party
+                    if domain.lower() not in match.lower(): 
                         integrityRegex = r"""integrity=('|")sha(256|384|512)-[a-zA-Z0-9\/=+]+('|")"""
-                        compiledIntegrityRegex = re.compile(integrityRegex)                 
+                        compiledIntegrityRegex = re.compile(integrityRegex)
+                        thirdPartyResult = compiledIntegrityRegex.search(match)
 
-                        result = compiledIntegrityRegex.search(match)
-                        if result is None:
+                        # check for relative paths, i.e. no http/https
+                        relativePathRegex = r"(http|https)"
+                        compiledRelativePathRegex = re.compile(relativePathRegex)
+                        relativePathResult = compiledRelativePathRegex.search(match)
+
+                        # process 3rd party resources
+                        if thirdPartyResult is None and relativePathResult is not None:
+
                             # Get offsets for highlighting response in issue detail
                             try:
                                 offset = self._get_matches(baseRequestResponse.getResponse(), match)
