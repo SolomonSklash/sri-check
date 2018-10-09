@@ -139,7 +139,7 @@ Copyright (c) 2018 bellma101""")
                         thirdPartyResult = compiledIntegrityRegex.search(match)
 
                         # check for relative paths, i.e. no http/https
-                        relativePathRegex = r"=('|\")(http|https|//)"
+                        relativePathRegex = r"=('|\")(https|http|//)"
                         compiledRelativePathRegex = re.compile(relativePathRegex)
                         relativePathResult = compiledRelativePathRegex.search(match)
 
