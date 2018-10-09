@@ -1,6 +1,6 @@
 """
 Name:           SRI Check
-Version:        1.0.0
+Version:        1.0.1
 Date:           08/17/2018
 Author:         bellma101 - bellma101@0xfeed.io - Penetration Tester with FIS Global
 Gitlab:         https://github.com/bellma101/cookie-decrypter/
@@ -18,7 +18,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 
 # Inherit IBurpExtender as base class, which defines registerExtenderCallbacks
 # Inherit IScannerCheck to register as custom scanner
