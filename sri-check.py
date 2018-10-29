@@ -65,7 +65,7 @@ Copyright (c) 2018 bellma101""")
     def regexResponseParse(self):
         matches = []
         scriptRegex = r"\<script.*?\>\<\/script\>"
-        linkRegex = r"\<link.+\>"
+        linkRegex = r"\<link.*?\>"
 
         try:
             compiledScriptRegex = re.compile(scriptRegex)
