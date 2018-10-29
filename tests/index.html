@@ -11,20 +11,33 @@
 
 <body>
 
-  <p>Not an issue (integrity attribute included): &#60;script src=&#34;https://example.com/example-framework.js&#34; integrity=&#34;sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC&#34; crossorigin=&#34;anonymous&#34;&#62;&#60;/script&#62;</p>
-    <script src="https://example.com/example-framework.js" integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC" crossorigin="anonymous"></script>
-  <p>Not an issue (integrity attribute included and loaded from host domain): &#60;script src=&#34;https://localhost:8002/asd&#34; integrity=&#34;sha512-OGQ1Nzc3ODYxMDk2ZTM1MzIzOWVhN2IzN2M0NTY5OWYzYjQzODVmNWJiMjU1M2NiZTFhNzgzMzNiZDJhODJjYWY3ODg5Yjg2NDIwYTUwZjUwZTI4NmVjN2ZhZDU1NzcxCg==&#34; crossorigin=&#34;anonymous&#34;&#62;&#60;/script&#62;</p>  
-    <script src="https://localhost:8002/asd" integrity="sha512-OGQ1Nzc3ODYxMDk2ZTM1MzIzOWVhN2IzN2M0NTY5OWYzYjQzODVmNWJiMjU1M2NiZTFhNzgzMzNiZDJhODJjYWY3ODg5Yjg2NDIwYTUwZjUwZTI4NmVjN2ZhZDU1NzcxCg==" crossorigin="anonymous"></script>
-  <p>Not an issue (integrity attribute included): &#60;link rel=&#34;stylesheet&#34; href=&#34;https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css&#34; integrity=&#34;sha512-5KWJw2mvMO2ZM5fndVxUQmpVPqaxZyYRTMrXtrprsyQ2zM0o0NMjU02I8ZJXeBPtrmrPO4IAyCCRsydG0BJoQ==&#34; crossorigin=&#34;anonymous&#34;&#62;</p>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" integrity="sha512-5KWJw2mvMO2ZM5fndVxUQmpVPqaxZyYRTMrXtrprsyQ2zM0o0NMjU02I8ZJXeBPtrmrPO4IAyCCRsydG0BJoQ==" crossorigin="anonymous">
+  <br><br>
+
+  <p><b>Two issues, testing back to back scripts:</b>&lt;script async=&quot;&quot; src=&quot;https://www.google.com/recaptcha/api.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;https://www.google.com/recaptcha/api.js&quot; async=&quot;&quot; defer=&quot;&quot;&gt;&lt;/script&gt;</p>
+  <script async="" src="https://www.google.com/recaptcha/api.js"></script><script src="https://www.google.com/recaptcha/api.js" async="" defer=""></script>
+
+  <p><b>Issue (integrity attribute not included):</b> &#60;link rel=&#34;stylesheet&#34; href=&#34;https://portswigger.net/content/images/logos/portswigger-logo.svg&#34;&#62;</p>
+  <link rel="stylesheet" href="https://portswigger.net/content/images/logos/portswigger-logo.svg">
+
   <p><b>Issue (integrity attribute not included):</b> &#60;script src=&#34;https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js&#34;&#62;&#60;/script&#62;</p>  
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-  <p>Not an issue (loaded from host domain): &#60;link rel=&#34;stylesheet&#34; href=&#34;http://localhost:8002/bootstrap/3.3.4/css/bootstrap.min.css&#34;&#62;</p>
-    <link rel="stylesheet" href="http://localhost:8002/bootstrap/3.3.4/css/bootstrap.min.css">
-  <p><b>Issue (integrity attribute not included):</b> &#60;link rel=&#34;stylesheet&#34; href=&#34;www.example.com&#34;&#62;</p>
-    <link rel="stylesheet" href="http://www.example.com">
-  <p>Not an issue (loaded from host domain via relative path): &#60;script src=&#34;assets/scripts/somescript.js&#34;&#62;&#60;/script&#62;</p>
-    <script src="assets/scripts/somescript.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+  <p>Not an issue (integrity attribute included): &#60;script src=&#34;https://code.jquery.com/jquery-3.3.1.slim.min.js&#34; integrity=&#34;sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC&#34; crossorigin=&#34;anonymous&#34;&#62;&#60;/script&#62;</p>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+  <p>Not an issue (integrity attribute included and loaded from host domain): &#60;script src=&#34;http://localhost:8002/scripts/somescript.js"#34; integrity=&#34;sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb==&#34; crossorigin=&#34;anonymous&#34;&#62;&#60;/script&#62;</p>  
+    <script src="http://localhost:8002/scripts/somescript.js" integrity="sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb" crossorigin="anonymous"></script>
+
+  <p>Not an issue (integrity attribute included): &#60;link rel=&#34;stylesheet&#34; href=&#34;https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css&#34; integrity=&#34;sha384-604wwakM23pEysLJAhja8Lm42IIwYrJ0dEAqzFsj9pJ/P5buiujjywArgPCi8eoz&#34; crossorigin=&#34;anonymous&#34;&#62;</p>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" integrity="sha384-604wwakM23pEysLJAhja8Lm42IIwYrJ0dEAqzFsj9pJ/P5buiujjywArgPCi8eoz" crossorigin="anonymous">
+
+  <p>Not an issue (loaded from host domain): &#60;link rel=&#34;stylesheet&#34; href=&#34;http://localhost:8002/scripts/somestylesheet.css&#34;&#62;</p>
+    <link rel="stylesheet" href="http://localhost:8002/scripts/somestylesheet.css">
+
+  <p>Not an issue (loaded from host domain via relative path): &#60;script src=&#34;scripts/somescript.js&#34;&#62;&#60;/script&#62;</p>
+    <script src="scripts/somescript.js"></script>
+
+
 
 </body>
 
