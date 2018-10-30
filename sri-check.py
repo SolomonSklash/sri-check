@@ -1,6 +1,6 @@
 """
 Name:           SRI Check
-Version:        1.0.4
+Version:        1.0.5
 Date:           08/17/2018
 Author:         bellma101 - bellma101@0xfeed.io - Penetration Tester with FIS Global
 Gitlab:         https://github.com/bellma101/cookie-decrypter/
@@ -18,7 +18,8 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = '1.0.4'
+VERSION = '1.0.5'
+DEBUG = 0
 
 # Pre-compile regexes
 scriptRegex = r"\<script.*?\>\<\/script\>"
@@ -56,6 +57,8 @@ class BurpExtender(IBurpExtender, IScannerCheck):
 Repository @ https://github.com/bellma101/sri-check
 Send feedback or bug reports to bellma101@0xfeed.io
 Copyright (c) 2018 bellma101""")
+        if DEBUG:
+            self._stdout.println("\n\nDEBUG enabled!")
 
         return
 
@@ -73,6 +76,10 @@ Copyright (c) 2018 bellma101""")
             matches.append(array('i', [start, start + matchlen]))
             start += matchlen
 
+        if DEBUG:
+            print("DEBUG:    _get_matches() array locations")
+            for match in matches:
+                print ("DEBUG:    " + str(match))
         return matches
 
     # Parse response for <script> and <link> tags
@@ -93,8 +100,14 @@ Copyright (c) 2018 bellma101""")
         try:
             for match in scriptMatch:
                 matches.append(match)
+                if DEBUG:
+                    print("DEBUG:    regexResponseParse() script regex match")
+                    print("DEBUG:    " + str(match))
             for match in linkMatch:
                 matches.append(match)
+                if DEBUG:
+                    print("DEBUG:    regexResponseParse() link regex match")
+                    print("DEBUG:    " + str(match))
         except:
             self._stderr.println("Failed to iterate through matches.")
 
@@ -117,6 +130,11 @@ Copyright (c) 2018 bellma101""")
             analyzedRequest = self._helpers.analyzeRequest(
                 baseRequestResponse.getRequest())
             headerRequestList = analyzedRequest.getHeaders()
+
+            if DEBUG:
+                for header in headerRequestList:
+                    print("DEBUG:    doPassiveScan() headers")
+                    print("DEBUG:    " + str(header))
 
             for header in headerRequestList:
                 try:
@@ -147,6 +165,10 @@ Copyright (c) 2018 bellma101""")
 
                         # process 3rd party resources
                         if thirdPartyResult is None and relativePathResult is not None:
+                            if DEBUG and thirdPartyResult:
+                                for result in thirdPartyResult:
+                                    print("DEBUG:    doPassiveScan() 3rd party result")
+                                    print("DEBUG:    " + str(result))
 
                             # Get offsets for highlighting response in issue detail
                             try:
@@ -216,21 +238,35 @@ class SRIScanIssue(IScanIssue):
         return 'Firm'
 
     def getIssueBackground(self):
-        return """Third-party libraries and scripts, such as Bootstrap, Angular, and jQuery,are commonly included from remote, potentially untrusted servers and CDNs. Subresource Integrity is a mechanism that verifys each time a resource is fetched, it matches a known good version and has not been tampered with. If Subresource Integrity has not been implemented, attackers could make malicious changes to a remote resource and compromise any site that includes the resource, as well as any users of the affected site."""
+        return "Third-party libraries and scripts, such as Bootstrap, Angular, and jQuery " \
+               "are commonly included from remote, potentially untrusted servers and CDNs. " \
+               "Subresource Integrity is a mechanism that verifies each time a resource is fetched, " \
+               "it matches a known good version and has not been tampered with. If Subresource " \
+               "Integrity has not been implemented, attackers could make malicious changes to a " \
+               "remote resource and compromise any site that includes the resource, as well as any " \
+               "users of the affected site."
 
     def getRemediationBackground(self):
         return "https://scotthelme.co.uk/subresource-integrity/<br>" \
-                "https://report-uri.com/home/sri_hash<br>" \
-                "https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity<br>" \
-                "https://www.w3.org/TR/SRI/"
+               "https://report-uri.com/home/sri_hash<br>" \
+               "https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity<br>" \
+               "https://www.w3.org/TR/SRI/"
 
     def getIssueDetail(self):
         description = "A script or stylesheet is missing the Subresource Integrity attribute."
         return description
 
     def getRemediationDetail(self):
-        return """Subresource Integrity should be used any time scripts or stylesheets are fetched from a third-party source. The "integrity" attribute is included any time a <script> or <link> HTML tag are used, e.g. <script src="https://example.com/example-framework.js" integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC" crossorigin="anonymous"></script> The "crossorigin" attribute is included to indicate that no credentials are needed in order fetch the resource.
-In order to generate the hash of the requested file, the following Linux command can be used on the resource file: "shasum -b -a [256,384,512] FILENAME.js | xxd -r -p | base64". In addition, two Content Security Policy header directives can be used to enforce the use of SRI on scripts and stylesheets: "require-sri-for script" and "require-sri-for style"."""
+        return "Subresource Integrity should be used any time scripts or stylesheets are fetched " \
+               "from a third-party source. The 'integrity' attribute is included any time a " \
+               "<script> or <link> HTML tag are used, e.g. <script src='https://example.com/example" \
+               "-framework.js' integrity='sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQh" \
+               "o1wx4JwY8wC' crossorigin='anonymous'></script> The 'crossorigin' attribute is included " \
+               "to indicate that no credentials are needed in order fetch the resource. In order to " \
+               "generate the hash of the requested file, the following Linux command can be used on the " \
+               "resource file: 'shasum -b -a [256,384,512] FILENAME.js | xxd -r -p | base64'. In " \
+               "addition, two Content Security Policy header directives can be used to enforce the use " \
+               "of SRI on scripts and stylesheets: 'require-sri-for script' and 'require-sri-for style'."
 
     def getHttpMessages(self):
         return self._requestResponse
