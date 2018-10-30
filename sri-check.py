@@ -1,6 +1,6 @@
 """
 Name:           SRI Check
-Version:        1.0.3
+Version:        1.0.4
 Date:           08/17/2018
 Author:         bellma101 - bellma101@0xfeed.io - Penetration Tester with FIS Global
 Gitlab:         https://github.com/bellma101/cookie-decrypter/
@@ -18,7 +18,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = '1.0.3'
+VERSION = '1.0.4'
 
 # Pre-compile regexes
 scriptRegex = r"\<script.*?\>\<\/script\>"
@@ -50,8 +50,9 @@ class BurpExtender(IBurpExtender, IScannerCheck):
         # register as scanner object so we get used for active/passive scans
         self._callbacks.registerScannerCheck(self)
 
-        stdout = PrintWriter(callbacks.getStdout(), True)
-        stdout.println("""Successfully loaded SRI Checks v""" + VERSION + """\n
+        self._stdout = PrintWriter(callbacks.getStdout(), True)
+        self._stderr = PrintWriter(callbacks.getStderr(), True)
+        self._stdout.println("""Successfully loaded SRI Checks v""" + VERSION + """\n
 Repository @ https://github.com/bellma101/sri-check
 Send feedback or bug reports to bellma101@0xfeed.io
 Copyright (c) 2018 bellma101""")
@@ -81,13 +82,13 @@ Copyright (c) 2018 bellma101""")
         try:
             response = self._requestResponse.getResponse()
         except:
-            print("Failed to get response.")
+            self._stderr.println("Failed to get response.")
 
         try:
             scriptMatch = compiledScriptRegex.findall(self._helpers.bytesToString(response))
             linkMatch = compiledLinkRegex.findall(self._helpers.bytesToString(response))
         except:
-            print("Failed to run regexes.")
+            self._stderr.println("Failed to run regexes.")
 
         try:
             for match in scriptMatch:
@@ -95,7 +96,7 @@ Copyright (c) 2018 bellma101""")
             for match in linkMatch:
                 matches.append(match)
         except:
-            print("Failed to iterate through matches.")
+            self._stderr.println("Failed to iterate through matches.")
 
         return matches
 
@@ -123,16 +124,16 @@ Copyright (c) 2018 bellma101""")
                         hostHeader = header
                         domain = hostHeader.split()[1]
                 except:
-                        print("Failed to get Host header.")
+                        self._stderr.println("Failed to get Host header.")
 
         except:
-            print 'Failed to parse request headers.'
+            self._stderr.println("Failed to parse request headers.")
 
         # Get <script> and <link> tags via regex
         try:
             matches = self.regexResponseParse()
         except:
-            print("Failed to get regex matches.")
+            self._stderr.println("Failed to get regex matches.")
 
         # Parse matches for missing SRI attribute and create corresponding issue
         try:
@@ -151,7 +152,7 @@ Copyright (c) 2018 bellma101""")
                             try:
                                 offset = self._get_matches(baseRequestResponse.getResponse(), match)
                             except:
-                                print("Failed to get match offset.")
+                                self._stderr.println("Failed to get match offset.")
                             # Append new issues
                             try:
                                 issues.append(SRIScanIssue(
@@ -160,11 +161,11 @@ Copyright (c) 2018 bellma101""")
                                     [self._callbacks.applyMarkers(self._requestResponse, None, offset)]
                                 ))
                             except:
-                                print("Failed to append issue.")
+                                self._stderr.println("Failed to append issue.")
                 except:
-                    print("Failed to match against domain.")
+                    self._stderr.println("Failed to match against domain.")
         except:
-            print("Failed to print matches.")
+            self._stderr.println("Failed to print matches.")
 
         if len(issues) > 0:
             return issues
