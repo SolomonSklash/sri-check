@@ -1,6 +1,6 @@
 """
 Name:           SRI Check
-Version:        1.0.2
+Version:        1.0.3
 Date:           08/17/2018
 Author:         bellma101 - bellma101@0xfeed.io - Penetration Tester with FIS Global
 Gitlab:         https://github.com/bellma101/cookie-decrypter/
@@ -18,11 +18,24 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = '1.0.2'
+VERSION = '1.0.3'
+
+# Pre-compile regexes
+scriptRegex = r"\<script.*?\>\<\/script\>"
+linkRegex = r"\<link.*?\>"
+integrityRegex = r"""integrity=('|")sha(256|384|512)-[a-zA-Z0-9\/=+]+('|")"""
+relativePathRegex = r"=('|\")(https|http|//)"
+
+try:
+    compiledScriptRegex = re.compile(scriptRegex)
+    compiledLinkRegex = re.compile(linkRegex)
+    compiledIntegrityRegex = re.compile(integrityRegex)
+    compiledRelativePathRegex = re.compile(relativePathRegex)    
+except:
+    print("Failed to compile regexes.")
 
 # Inherit IBurpExtender as base class, which defines registerExtenderCallbacks
 # Inherit IScannerCheck to register as custom scanner
-
 
 class BurpExtender(IBurpExtender, IScannerCheck):
 
@@ -64,14 +77,6 @@ Copyright (c) 2018 bellma101""")
     # Parse response for <script> and <link> tags
     def regexResponseParse(self):
         matches = []
-        scriptRegex = r"\<script.*?\>\<\/script\>"
-        linkRegex = r"\<link.*?\>"
-
-        try:
-            compiledScriptRegex = re.compile(scriptRegex)
-            compiledLinkRegex = re.compile(linkRegex)
-        except:
-            print("Failed to compile regexes.")
 
         try:
             response = self._requestResponse.getResponse()
@@ -133,14 +138,10 @@ Copyright (c) 2018 bellma101""")
         try:
             for match in matches:
                 try:  # check if resource is being loaded from 3rd party
-                    if domain.lower() not in match.lower(): 
-                        integrityRegex = r"""integrity=('|")sha(256|384|512)-[a-zA-Z0-9\/=+]+('|")"""
-                        compiledIntegrityRegex = re.compile(integrityRegex)
+                    if domain.lower() not in match.lower():
                         thirdPartyResult = compiledIntegrityRegex.search(match)
 
                         # check for relative paths, i.e. no http/https
-                        relativePathRegex = r"=('|\")(https|http|//)"
-                        compiledRelativePathRegex = re.compile(relativePathRegex)
                         relativePathResult = compiledRelativePathRegex.search(match)
 
                         # process 3rd party resources
