@@ -13,4 +13,4 @@ A Burp Suite extension for identifying missing Subresource Integrity attributes.
 * ~~Add support for relative paths~~
 
 ### Screenshots
-![Example Issue](screenshots/screenshot01.png)
+
