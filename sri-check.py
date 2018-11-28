@@ -1,6 +1,6 @@
 """
 Name:           SRI Check
-Version:        1.0.5
+Version:        1.1.0
 Date:           08/17/2018
 Author:         bellma101 - bellma101@0xfeed.io - Penetration Tester with FIS Global
 Gitlab:         https://github.com/bellma101/cookie-decrypter/
@@ -18,14 +18,14 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = '1.0.5'
+VERSION = '1.1.0'
 DEBUG = 0
 
 # Pre-compile regexes
-scriptRegex = r"\<script.*?\>\<\/script\>"
-linkRegex = r"\<link.*?\>"
-integrityRegex = r"""integrity=('|")sha(256|384|512)-[a-zA-Z0-9\/=+]+('|")"""
-relativePathRegex = r"=('|\")(https|http|//)"
+scriptRegex = r"(?i)\< ?script.*?\>\< ?\/ ?script ?\>"
+linkRegex = r"(?i)\< ?link.*?\>"
+integrityRegex = r"""(?i) ?integrity ?= ?(\'|\") ?sha ?(256|384|512) ?- ?[a-zA-Z0-9\/=+]+ ?(\'|\")"""
+relativePathRegex = r"(?i) ?= ?('|\") ?(https|http|//)"
 
 try:
     compiledScriptRegex = re.compile(scriptRegex)
@@ -259,7 +259,7 @@ class SRIScanIssue(IScanIssue):
     def getRemediationDetail(self):
         return "Subresource Integrity should be used any time scripts or stylesheets are fetched " \
                "from a third-party source. The 'integrity' attribute is included any time a " \
-               "<script> or <link> HTML tag are used, e.g. <script src='https://example.com/example" \
+               "<script> or <link> HTML tag is used, e.g. <script src='https://example.com/example" \
                "-framework.js' integrity='sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQh" \
                "o1wx4JwY8wC' crossorigin='anonymous'></script> The 'crossorigin' attribute is included " \
                "to indicate that no credentials are needed in order fetch the resource. In order to " \
