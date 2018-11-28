@@ -11,7 +11,7 @@ A Burp Suite extension for identifying missing Subresource Integrity attributes.
 ### Todo
 
 * ~~Add support for relative paths~~
-* Improve regex, especially accounting for the case of script and link tags and spaces in tags
+* ~~Improve regex, especially accounting for the case of script and link tags and spaces in tags~~
 * Check MIME type of pages to prevent running against images, CSS, etc.
 
 ### Screenshots
