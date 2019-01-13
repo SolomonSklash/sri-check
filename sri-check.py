@@ -1,12 +1,12 @@
 """
 Name:           SRI Check
-Version:        1.1.0
+Version:        1.2.0
 Date:           08/17/2018
 Author:         bellma101 - bellma101@0xfeed.io - Penetration Tester with FIS Global
 Gitlab:         https://github.com/bellma101/cookie-decrypter/
 Description:    This extension detects the lack of Subresource Integrity attributes
 in <script> and <link> tags.
-Copyright (c) 2018 bellma101
+Copyright (c) 2019 bellma101
 """
 
 try:
@@ -18,7 +18,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = '1.1.0'
+VERSION = '1.2.0'
 DEBUG = 0
 
 # Pre-compile regexes
@@ -31,7 +31,7 @@ try:
     compiledScriptRegex = re.compile(scriptRegex)
     compiledLinkRegex = re.compile(linkRegex)
     compiledIntegrityRegex = re.compile(integrityRegex)
-    compiledRelativePathRegex = re.compile(relativePathRegex)    
+    compiledRelativePathRegex = re.compile(relativePathRegex)
 except:
     print("Failed to compile regexes.")
 
@@ -83,11 +83,12 @@ Copyright (c) 2018 bellma101""")
         return matches
 
     # Parse response for <script> and <link> tags
-    def regexResponseParse(self):
+    def regexResponseParse(self, baseRequestResponse):
         matches = []
 
         try:
-            response = self._requestResponse.getResponse()
+            response = baseRequestResponse.getResponse()
+
         except:
             self._stderr.println("Failed to get response.")
 
@@ -121,8 +122,6 @@ Copyright (c) 2018 bellma101""")
 
     def doPassiveScan(self, baseRequestResponse):
 
-        self._requestResponse = baseRequestResponse
-
         issues = list()
 
         # Analyze request for Host header
@@ -149,7 +148,7 @@ Copyright (c) 2018 bellma101""")
 
         # Get <script> and <link> tags via regex
         try:
-            matches = self.regexResponseParse()
+            matches = self.regexResponseParse(baseRequestResponse)
         except:
             self._stderr.println("Failed to get regex matches.")
 
@@ -178,9 +177,9 @@ Copyright (c) 2018 bellma101""")
                             # Append new issues
                             try:
                                 issues.append(SRIScanIssue(
-                                    self._requestResponse.getHttpService(),
+                                    baseRequestResponse.getHttpService(),
                                     self._helpers.analyzeRequest(baseRequestResponse).getUrl(),
-                                    [self._callbacks.applyMarkers(self._requestResponse, None, offset)]
+                                    [self._callbacks.applyMarkers(baseRequestResponse, None, offset)]
                                 ))
                             except:
                                 self._stderr.println("Failed to append issue.")
