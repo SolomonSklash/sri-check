@@ -1,6 +1,6 @@
 """
 Name:           SRI Check
-Version:        1.2.0
+Version:        1.3.0
 Date:           08/17/2018
 Author:         bellma101 - bellma101@0xfeed.io - Penetration Tester with FIS Global
 Gitlab:         https://github.com/bellma101/cookie-decrypter/
@@ -18,7 +18,7 @@ try:
 except ImportError:
     print "Failed to load dependencies."
 
-VERSION = '1.2.0'
+VERSION = '1.3.0'
 DEBUG = 0
 
 # Pre-compile regexes
@@ -121,6 +121,22 @@ Copyright (c) 2018 bellma101""")
     # baseRequestResponse)
 
     def doPassiveScan(self, baseRequestResponse):
+
+        # Get MIME type of response
+        try:
+            test = self._helpers.analyzeResponse(baseRequestResponse.getResponse())
+            MIME = test.getStatedMimeType()
+            if DEBUG:
+                print("DEBUG:    MIME type")
+                print("DEBUG:    " + str(MIME))
+        except:
+            self._stderr.println("Failed to get MIME type.")
+
+        # MIME types to check for script and link tags
+        MIMETypes = ["HTML", "script", "text"]
+
+        if MIME not in MIMETypes:
+            exit
 
         issues = list()
 
