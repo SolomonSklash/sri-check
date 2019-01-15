@@ -12,7 +12,9 @@ A Burp Suite extension for identifying missing Subresource Integrity attributes.
 
 * ~~Add support for relative paths~~
 * ~~Improve regex, especially accounting for the case of script and link tags and spaces in tags~~
-* Check MIME type of pages to prevent running against images, CSS, etc.
+* ~~Check MIME type of pages to prevent running against images, CSS, etc.~~
+* ~~Fix possible concurrency issues~~
+* Account for possible false positives on <link> tags
 
 ### Screenshots
 ![Example Issue](screenshots/screenshot01.png)
