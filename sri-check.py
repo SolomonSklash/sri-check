@@ -23,7 +23,6 @@ DEBUG = 0
 
 # Pre-compile regexes
 scriptRegex = r"(?i)\< ?script.*?\>\< ?\/ ?script ?\>"
-# linkRegex = r"(?i)\< ?link.*?\>"
 linkRegex = r"(?i)\<\s?link\s?[^\>]*rel=[\"|\']stylesheet[\"|\'][^\>]*\>"
 integrityRegex = r"""(?i) ?integrity ?= ?(\'|\") ?sha ?(256|384|512) ?- ?[a-zA-Z0-9\/=+]+ ?(\'|\")"""
 relativePathRegex = r"(?i) ?= ?('|\") ?(https|http|//)"
