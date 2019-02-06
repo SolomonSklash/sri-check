@@ -2,11 +2,11 @@
 Name:           SRI Check
 Version:        1.4.0
 Date:           08/17/2018
-Author:         bellma101 - bellma101@0xfeed.io - Penetration Tester with FIS Global
-Gitlab:         https://github.com/bellma101/cookie-decrypter/
+Author:         SolomonSklash - solomonsklash@0xfeed.io - Penetration Tester with FIS Global
+Github:         https://github.com/SolomonSklash/cookie-decrypter/
 Description:    This extension detects the lack of Subresource Integrity attributes
 in <script> and <link> tags.
-Copyright (c) 2019 bellma101
+Copyright (c) 2019 SolomonSklash
 """
 
 try:
@@ -54,9 +54,9 @@ class BurpExtender(IBurpExtender, IScannerCheck):
         self._stdout = PrintWriter(callbacks.getStdout(), True)
         self._stderr = PrintWriter(callbacks.getStderr(), True)
         self._stdout.println("""Successfully loaded SRI Checks v""" + VERSION + """\n
-Repository @ https://github.com/bellma101/sri-check
-Send feedback or bug reports to bellma101@0xfeed.io
-Copyright (c) 2018 bellma101""")
+Repository @ https://github.com/SolomonSklash/sri-check
+Send feedback or bug reports to solomonsklash@0xfeed.io
+Copyright (c) 2018 SolomonSklash""")
         if DEBUG:
             self._stdout.println("\n\nDEBUG enabled!")
 
