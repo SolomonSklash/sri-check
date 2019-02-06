@@ -1,4 +1,4 @@
-# burp-sri
+# sri-check
 
 A Burp Suite extension for identifying missing Subresource Integrity attributes.
 
